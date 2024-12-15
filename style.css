@@ -1,0 +1,134 @@
+body {
+    margin: 0;
+    font-family: 'Helvetica Rounded', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(135deg, #ffc0cb, #800080); /* Default background gradient */
+    color: white;
+    overflow: hidden;
+}
+
+/* Circle to preview selected gradient */
+.gradient-preview {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ffc0cb, #800080); /* Default gradient */
+    cursor: pointer;
+    border: 2px solid #fff;
+    z-index: 10;
+}
+
+/* Menu container for selecting preselected gradients */
+.gradient-menu {
+    display: none;
+    position: fixed;
+    bottom: 80px;
+    left: 20px;
+    background-color: #0b0b0b;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    z-index: 20;
+}
+
+.gradient-menu.visible {
+    display: block;
+}
+
+.gradient-option {
+    padding: 10px;
+    margin: 5px;
+    cursor: pointer;
+    border-radius: 50%;
+    background-color: #6a1b9a;
+    color: transparent; /* No text */
+    text-align: center;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+.gradient-option:hover {
+    background-color: #9c4dcc;
+}
+
+/* Container for timer and other elements */
+.container {
+    text-align: center;
+    transition: all 0.3s ease-in-out;
+}
+
+h1 {
+    font-size: 10rem; /* Default size */
+    font-weight: bold;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Make the timer even larger when the timer starts */
+.container.timer-running h1 {
+    font-size: 15rem; /* Even larger timer font */
+}
+
+/* Button styling */
+button {
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    background-color: #6a1b9a;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #9c4dcc;
+}
+
+button:focus {
+    outline: none;
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+/* Styling for input fields */
+input[type="number"] {
+    padding: 10px;
+    font-size: 1.2rem;
+    border-radius: 5px;
+    border: 2px solid #fff;
+    margin: 5px;
+    width: 80px;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+input[type="number"]:focus {
+    outline: none;
+    border-color: #9c4dcc;
+}
+
+/* Hidden elements initially */
+.hidden {
+    display: none;
+}
+
+/* Styling for stop button */
+#stop-button {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    display: none;
+}
