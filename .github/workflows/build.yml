@@ -47,14 +47,28 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-cargo-
 
-      # Initialize Tauri project (without npm or yarn)
-      - name: Initialize Tauri
+      # Manually create the Tauri configuration files
+      - name: Create Tauri config
         run: |
           npx tauri init --no-install
+          echo '{
+            "build": {
+              "distDir": "../dist",
+              "devPath": "http://localhost:4000"
+            },
+            "tauri": {
+              "bundle": {
+                "windows": {
+                  "target": ["msi", "exe"]
+                }
+              }
+            }
+          }' > src-tauri/tauri.conf.json
 
       # Build the Tauri app
       - name: Build Tauri app
-        run: npm run tauri build
+        run: |
+          cd src-tauri && npm run tauri build
 
       # Upload the .exe as a build artifact
       - name: Upload artifact
