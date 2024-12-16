@@ -47,6 +47,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-cargo-
 
+      # Ensure src-tauri exists and create it if not
+      - name: Ensure src-tauri directory exists
+        run: |
+          if (-Not (Test-Path src-tauri)) { mkdir src-tauri }
+
       # Manually create package.json file (since it's required for Tauri)
       - name: Create package.json
         run: |
@@ -66,7 +71,6 @@ jobs:
       # Create Tauri config manually
       - name: Create Tauri config
         run: |
-          mkdir -p src-tauri
           echo '{
             "build": {
               "distDir": "../dist",
