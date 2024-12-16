@@ -1,0 +1,69 @@
+name: Build Tauri App
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Clone the Study-Timer repository
+      - name: Clone Study-Timer Repository
+        run: |
+          git clone https://github.com/KarthikSambhuR/Study-Timer.git study-timer
+
+      # Move files to the appropriate Tauri folder
+      - name: Organize files
+        run: |
+          mkdir -p src-tauri/dist
+          mv study-timer/index.html src-tauri/dist/index.html
+          mv study-timer/style.css src-tauri/dist/style.css
+          mv study-timer/script.js src-tauri/dist/script.js
+
+      # Install Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      # Install Rust
+      - name: Set up Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          components: rustfmt
+          override: true
+
+      # Cache dependencies for faster builds
+      - name: Cache Node.js modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      # Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # Build the Tauri app
+      - name: Build Tauri app
+        run: npm run tauri build
+
+      # Upload the .exe as a build artifact
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: tauri-app
+          path: src-tauri/target/release/*.exe
