@@ -47,10 +47,26 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-cargo-
 
-      # Manually create the Tauri configuration files
+      # Manually create package.json file (since it's required for Tauri)
+      - name: Create package.json
+        run: |
+          echo '{
+            "name": "study-timer",
+            "version": "1.0.0",
+            "private": true,
+            "scripts": {
+              "tauri": "tauri"
+            },
+            "dependencies": {},
+            "devDependencies": {
+              "tauri": "^2.0.0"
+            }
+          }' > package.json
+
+      # Create Tauri config manually
       - name: Create Tauri config
         run: |
-          npx tauri init --no-install
+          mkdir -p src-tauri
           echo '{
             "build": {
               "distDir": "../dist",
@@ -65,10 +81,15 @@ jobs:
             }
           }' > src-tauri/tauri.conf.json
 
+      # Install Tauri CLI using npm
+      - name: Install Tauri CLI
+        run: |
+          npm install
+
       # Build the Tauri app
       - name: Build Tauri app
         run: |
-          cd src-tauri && npm run tauri build
+          npx tauri build
 
       # Upload the .exe as a build artifact
       - name: Upload artifact
