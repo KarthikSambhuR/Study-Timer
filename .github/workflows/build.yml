@@ -17,7 +17,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Clone the Study-Timer repository
+      # Clone the Study-Timer Repository
       - name: Clone Study-Timer Repository
         run: |
           git clone https://github.com/KarthikSambhuR/Study-Timer.git study-timer
@@ -30,13 +30,7 @@ jobs:
           mv study-timer/style.css src-tauri/dist/style.css
           mv study-timer/script.js src-tauri/dist/script.js
 
-      # Install Node.js
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-
-      # Install Rust
+      # Install Rust (Skip Node.js install since it's not needed)
       - name: Set up Rust
         uses: actions-rs/toolchain@v1
         with:
@@ -44,18 +38,19 @@ jobs:
           components: rustfmt
           override: true
 
-      # Cache dependencies for faster builds
-      - name: Cache Node.js modules
+      # Cache Rust dependencies for faster builds
+      - name: Cache Rust dependencies
         uses: actions/cache@v3
         with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          path: ~/.cargo
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.toml') }}
           restore-keys: |
-            ${{ runner.os }}-node-
+            ${{ runner.os }}-cargo-
 
-      # Install dependencies
-      - name: Install dependencies
-        run: npm install
+      # Initialize Tauri project (without npm or yarn)
+      - name: Initialize Tauri
+        run: |
+          npx tauri init --no-install
 
       # Build the Tauri app
       - name: Build Tauri app
